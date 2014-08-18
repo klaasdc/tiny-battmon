@@ -14,7 +14,7 @@ int greenled = 2;
 int voltIn = A2;
 
 //Offset to be applied on the ADC measurement
-uint16_t offset = 36;
+uint16_t offset = 72;
 
 //To hide the voltage status until enough samples are taken
 uint8_t startupComplete = 0;
@@ -25,6 +25,7 @@ uint8_t startupComplete = 0;
 volatile uint8_t measIdx = 0;
 volatile uint16_t measuredValues[NB_MEAS];
 
+//Define NOP instruction for delay loop
 #define NOP __asm__ __volatile__ ("nop\n\t")
 
 void initTimerCounter1(); // function prototype
