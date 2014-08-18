@@ -5,6 +5,14 @@
  */
 #include <avr/io.h>
 #include <avr/interrupt.h>
+#include <avr/sleep.h>
+
+#ifndef cbi
+  #define cbi(sfr, bit) (_SFR_BYTE(sfr) &= ~_BV(bit))
+#endif
+#ifndef sbi
+  #define sbi(sfr, bit) (_SFR_BYTE(sfr) |= _BV(bit))
+#endif
 
 //PB1 Has a red led
 //PB2 Has a green led
@@ -50,6 +58,7 @@ void initTimerCounter1() {    // initialize Timer1
 }
 
 ISR(TIM1_COMPA_vect) {
+  sbi(ADCSRA,ADEN);//Turn ADC on
   //Store new measurement into array
   measuredValues[measIdx] = analogRead(voltIn);//Value between [0 and 1023]
   measIdx++;
@@ -57,6 +66,7 @@ ISR(TIM1_COMPA_vect) {
     measIdx = 0;
     startupComplete = 1;
   }
+  cbi(ADCSRA,ADEN);//Turn ADC off to save some power
 }
 
 enum ledState {
@@ -136,12 +146,12 @@ void loop() {
       delayOwn(400);
       digitalWrite(redled, LOW);
       digitalWrite(greenled, LOW);
-      delayOwn(400);
       break;
    default:
       digitalWrite(redled, LOW);
       digitalWrite(greenled, LOW);
   }
+  delayOwn(400);
 }
 
 //Simple delay routine to avoid the built-in one that messes with our timer
@@ -152,3 +162,4 @@ void delayOwn(int value) {
     }
   }
 }
+
