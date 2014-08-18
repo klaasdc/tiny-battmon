@@ -138,7 +138,6 @@ void loop() {
       delayOwn(400);
       digitalWrite(redled, LOW);
       digitalWrite(greenled, LOW);
-      delayOwn(400);
       break;
     case BLINK_RED_S:
       digitalWrite(redled, HIGH);
